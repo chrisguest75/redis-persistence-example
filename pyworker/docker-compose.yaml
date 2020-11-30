@@ -4,9 +4,7 @@ services:
   redis:
     image: redis:5.0.4-alpine
     ports:
-      - "6379"
-    expose:
-      - "6379"
+      - "6379:6379"
     #network_mode: host
     networks:
       - redis_backplane      
