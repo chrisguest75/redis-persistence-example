@@ -13,7 +13,7 @@ def load_words_into_redis(redis, words):
             first_word = word
 
         if count % 1000 == 0:
-            print(count, "words loaded - first -", first_word, "last -", word)
+            print(str(count) + "words loaded - first - '" + first_word + "' last - '" + word + "'")
             first_word = ""
 
     print("Finished")
