@@ -2,6 +2,23 @@ import redis
 import os
 import io
 
+def load_words_into_redis(redis, words):
+    print("Loading words")
+    count = 0
+    first_word = ""
+    for word in words:
+        redis.mset({word:"true"})
+        count += 1
+        if first_word == "":
+            first_word = word
+
+        if count % 1000 == 0:
+            print(count, "words loaded - first -", first_word, "last -", word)
+            first_word = ""
+
+    print("Finished")
+
+
 if __name__ == '__main__':
     server_url = "0.0.0.0"    
     server_port = int("6379")    
@@ -13,16 +30,7 @@ if __name__ == '__main__':
     redis = redis.Redis(host=server_url, port=server_port)
 
     with(io.open("./word-list.txt")) as f:
-        lines = [line.rstrip() for line in f]
+        words = [line.rstrip() for line in f]
 
-    print("Loading words")
-    count = 0
-    for word in lines:
-        redis.mset({word:"true"})
-        count += 1
-        if count % 1000 == 0:
-            print(count, "words loaded" )
-
-    print("Finished")
-
+    load_words_into_redis(redis, words)
 
