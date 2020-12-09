@@ -39,7 +39,10 @@ Use vscode -
 vscode
 shellcheck
 
-
 ## Redis
-
+Redis Commands
 [Commands](https://redis.io/commands)  
+
+
+## Python Example
+[README.md](./pyworker/README.md)
