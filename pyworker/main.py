@@ -1,8 +1,19 @@
 import redis
 import os
 import io
+import time 
+
+# TODO:
+# Timing outputs
+# Load as a list
+# Load with less requests
+# Pickle?
+# Read out values to build a dictionary
 
 def load_words_into_redis(redis, words):
+    '''
+    Load words into redis as keys - slow.......
+    '''
     print("Loading words")
     count = 0
     first_word = ""
@@ -13,7 +24,7 @@ def load_words_into_redis(redis, words):
             first_word = word
 
         if count % 1000 == 0:
-            print(str(count) + "words loaded - first - '" + first_word + "' last - '" + word + "'")
+            print(str(count) + " words loaded - first - '" + first_word + "' last - '" + word + "'")
             first_word = ""
 
     print("Finished")
@@ -29,8 +40,16 @@ if __name__ == '__main__':
 
     redis = redis.Redis(host=server_url, port=server_port)
 
-    with(io.open("./word-list.txt")) as f:
+    # load the word list
+    start = time.perf_counter()
+    filepath = "./word-list.txt"
+    print(f"Load file '{filepath}'")
+    with(io.open(filepath)) as f:
         words = [line.rstrip() for line in f]
+    print(f"Time taken to load file '{time.perf_counter() - start:0.4f}' secs")
 
+    # push into redis
+    start = time.perf_counter()
     load_words_into_redis(redis, words)
+    print(f"Time taken to load words into Redis '{time.perf_counter() - start:0.4f}' secs")
 
