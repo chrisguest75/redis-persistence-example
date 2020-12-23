@@ -42,7 +42,10 @@ shellcheck
 ## Redis
 Redis Commands
 [Commands](https://redis.io/commands)  
-
+[Datatype()]https://redis.io/topics/data-types-intro)  
+[Notifications](https://redis.io/topics/notifications)  
+  
 
 ## Python Example
-[README.md](./pyworker/README.md)
+There is an example of using python to load a cache and perform some actions on it. [README.md](./pyworker/README.md)
+

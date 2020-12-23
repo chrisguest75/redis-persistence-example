@@ -7,7 +7,6 @@ import argparse
 import pprint
 
 # TODO:
-# Load as a list
 # Load with less requests
 # Pickle?
 # Read out values to build a dictionary
@@ -71,7 +70,7 @@ if __name__ == '__main__':
     parser.add_argument('--port', default="6379", dest='port', type=str, help='')
 
 
-    parser.add_argument('action', choices=['load', 'flush', 'query'])
+    parser.add_argument('action', choices=['load', 'flush', 'query', 'watch'])
 
     # load
     parser.add_argument('--method', dest='method', type=str, help='Name of method for data loading')
@@ -163,4 +162,13 @@ if __name__ == '__main__':
     # watch
     ############################################################
     if args.action == "watch":
-        print(f"dbsize:{redis.dbsize()}")
+        pubsub = redis.pubsub()
+        pubsub.psubscribe('__keyspace@0__:*')
+        print('Starting message loop')
+        while True:
+            message = pubsub.get_message()
+            if message:
+                print(message)
+            else:
+                time.sleep(0.01)
+
