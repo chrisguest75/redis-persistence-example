@@ -43,19 +43,18 @@ def load_words_into_redis_mset_slice(redis, words):
 
     print(f"Loading {len(words)} words")
     count = 0
-    grab = 1
+    grab = 3000
     ct.start()
     while count < len(words):
         take = grab
         if count + grab > len(words):
             take = len(words) - count        
-        sliced = words[count:take]
+        sliced = words[count:(take + count)]
         count += take
 
         bag = {}
         for word in sliced:
             bag[word] = "true"   
-        print(bag)     
         redis.mset(bag)
 
         print(f"{count} words loaded - first:'{sliced[0]}' last:'{sliced[-1]}' '{ct.stop():0.4f}' secs")
