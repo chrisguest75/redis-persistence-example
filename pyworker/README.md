@@ -27,4 +27,20 @@ docker run -it --rm --network=pyworker_redis_backplane --entrypoint /bin/sh redi
 > mget aardvark
 ```
 
+Examples for the pyworker cli
+```sh
+# flush the cache
+python ./main.py flush  
 
+# insert the dictionary 
+python ./main.py load --method slice 
+
+# get info on redis server
+python ./main.py query --method info           
+
+# get info on key
+python ./main.py query --method key --key aardvark
+
+# scan all keys matching a pattern
+python ./main.py query --method scan --match "b*"   
+```

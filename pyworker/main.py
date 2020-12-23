@@ -4,6 +4,7 @@ import io
 import time 
 from code_timer import CodeTimer
 import argparse
+import pprint
 
 # TODO:
 # Load as a list
@@ -43,7 +44,7 @@ def load_words_into_redis_mset_slice(redis, words):
 
     print(f"Loading {len(words)} words")
     count = 0
-    grab = 3000
+    grab = 5000
     ct.start()
     while count < len(words):
         take = grab
@@ -78,6 +79,8 @@ if __name__ == '__main__':
     # flush
 
     # query
+    parser.add_argument('--key', dest='key', type=str, help='Name of key to query')
+    parser.add_argument('--match', dest='match', type=str, help='Pattern to match when querying strings')
 
 
     args = parser.parse_args()
@@ -132,5 +135,32 @@ if __name__ == '__main__':
             print("No method specified - try info")
         elif args.method.lower() == "info":
             print(f"dbsize:{redis.dbsize()}")
+            print(f"client_id:{redis.client_id()}")
+            print(f"client_list:{redis.client_list()}")
+            print(f"lastsave:{redis.lastsave()}")
+            pprint.pprint(f"memory_stats:{redis.memory_stats()}")
+            print(f"time:{redis.time()}")            
+        elif args.method.lower() == "key":
+            if args.key != None:
+                print(f"key:{args.key} value:{redis.mget(args.key)}")
+                print(f"strlen:{redis.strlen(args.key)}")
+                print(f"ttl:{redis.ttl(args.key)}")
+            else:
+                print("No key specified")
+        elif args.method.lower() == "scan":
+            words = 0
+            match = "*" if args.match == None else args.match
+            for key in redis.scan_iter(match=match,count=1000):
+                words += 1
+                print(key)
+            print(f"{words} in set")
+            #keys = redis.scan(cursor=0, match=".", count=1000, _type="SET")
+            #print(keys)
         else:
             print(f"Method {args.method} not recognised")
+
+    ############################################################
+    # watch
+    ############################################################
+    if args.action == "watch":
+        print(f"dbsize:{redis.dbsize()}")
