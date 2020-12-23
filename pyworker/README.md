@@ -20,6 +20,9 @@ python ./main.py
 # run a client to query
 docker run -it --rm --network=pyworker_redis_backplane --entrypoint /bin/sh redis:5.0.4-alpine
 
+# get notification configs
+> redis-cli -h redis config get notify-keyspace-events
+
 # connect inside the container
 > redis-cli -h redis
 

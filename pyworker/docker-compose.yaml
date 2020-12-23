@@ -10,6 +10,8 @@ services:
       - redis_backplane      
     volumes:
       - ./redis-data:/data      
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
 
 networks:
   redis_backplane:
